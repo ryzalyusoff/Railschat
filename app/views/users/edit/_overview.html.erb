@@ -1,0 +1,75 @@
+<div id="panel-body-general" class="panel-content panel-content-active">
+  <%= form_for(@user, url: registration_path(resource_name), html: { method: :put, id: "update-overview-form" }, remote: true) do |f| %>
+
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :first_name %>
+        <div class="form-group">
+          <%= f.text_field :first_name, class: "form-control input-sm" %>
+        </div>
+      </div>
+    </div> 
+
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :last_name %>
+        <div class="form-group">
+          <%= f.text_field :last_name, class: "form-control input-sm" %>
+        </div>
+      </div>
+    </div>   
+
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :email %>
+        <div class="form-group">
+          <%= f.text_field :email, class: "form-control input-sm" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :location %>
+        <div class="form-group">
+          <%= f.text_field :location, class: "form-control input-sm" %>
+        </div>
+      </div>
+    </div> 
+
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :company %> / <%= f.label :institution %>
+        <div class="form-group">
+          <%= f.text_field :company, class: "form-control input-sm", placeholder: "Company, university, college, school etc." %>
+        </div>
+      </div>
+    </div>  
+
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :position %>
+        <div class="form-group">
+        <%= f.select(:position, options_for_select([['Founder'],['CEO/President'], ['VP'], ['C-Level Exec'], ['Senior Manager'], ['Professional'], ['Student/Intern'], ['Other']], @user.position), {:include_blank => 'Please select'}, { :class => 'form-control' }) %>
+        </div>
+      </div>
+    </div>       
+
+    <div class="row">
+      <div class="col-md-12">
+        <%= f.label :description %>
+        <div class="form-group">
+          <%= f.text_area :description, class: "form-control input-sm", rows: "5" %>
+        </div>
+      </div>
+    </div>   
+
+
+    <div class="actions">
+      <%= f.hidden_field :form_id, :value => "update-overview-form" %> 
+      <%= f.button class: "btn btn-primary btn-md", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Save"} do %>
+        <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+      <% end %>
+    </div>
+  <% end %>
+</div>  

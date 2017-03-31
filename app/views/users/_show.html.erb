@@ -1,0 +1,194 @@
+<style type="text/css">
+
+  #event-header{
+    position: relative;
+    border-bottom: 0px;
+    width: 100%;
+
+    min-height: none !important;
+    max-height: none !important;
+    background: #fff;
+
+    padding: 15px 20px;
+
+    overflow:hidden;
+  }
+
+  #event-header-info {
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+
+      /*
+      position: absolute;
+      top: 30%;
+      left: 0;
+      width: 100%;
+      */
+
+      color: #333;
+      text-align: left;
+  }
+
+  #event-header-title{
+      font-family: 'HelveticaNeue-Bold';
+      font-size: 28px;
+      font-weight: 500;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, .5);
+      text-transform: capitalize;
+  }
+
+  #event-header-details{
+    font-size: 16px;
+    font-weight: 200;
+  }
+
+  #event-navigation{
+    height: 50px;
+    background-color: #fff;
+  }
+
+  .event-menu{
+    font-size: 15px;
+    height: 100%;
+    padding-top: 14px;
+    text-align: center;
+  }
+
+  .event-menu a{
+    display: block;
+    color: #333;
+  }
+
+  .event-menu a:hover{
+    text-decoration: none;
+  }
+
+  .event-menu:hover{
+    border-bottom: 1px solid #8dc0ec;
+  }
+
+  .event-menu-active{
+    border-bottom: 1px solid #337ab7;
+  }
+
+  .event-menu-active a{
+    color: #337ab7
+  }
+
+  #event-menu-content {
+    margin-top: 20px;
+  }
+
+  @media screen and (max-width: 768px) {
+      #event-header-title {
+          font-size: 18px;
+      }
+
+      #event-header-details{
+        font-size: 14px;
+      }
+
+      .event-menu-text{
+        display: none;
+      }
+  }
+
+  .attend-text{
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: 700;
+  }
+
+  #attending-text div{
+    width: 150px;
+    padding: 10px 20px;
+    border: 1px solid #fff;
+    border-radius: 30px;
+    margin: 5px auto;
+    margin-top: 20px;
+  }
+
+  .attend-text p a{
+    font-weight: 700;
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  #new_attendance{
+    margin-top: 10px;
+  }
+
+  .title-lg{
+    font-size: 20px;
+  }
+
+  .font-md{
+    font-size: 15px;
+  }
+</style>
+
+<div class="container-fluid">
+
+    <div class="row">
+      <div class="col-md-12 col-no-padding-x">
+        <div id="event-header">
+          <div id="event-header-info">
+
+              <div class="row">
+
+                <div class="col-md-3">
+                    <%= link_to user_path(@user) do %>
+                      <figure class="avatar-xtra-large center-md margin-bottom-sm-tablet">
+                        <%= render :partial => 'shared/user_avatar', :object => @user %>
+                      </figure>
+                    <% end %>
+                </div>
+
+                <div class="col-md-9">
+                  <header class="title-lg">
+                    <%= @user.full_name %>
+                  </header>
+
+                  <p class="last-conversation message-body margin-top-md margin-bottom-md font-md">
+                      <%= @user.description %>
+                  </p>
+
+                  <p class="font-md margin-bottom-md">
+                    <% if !@user.position.nil? && @user.position != "" %>
+                      <i class="fa fa-briefcase color-primary" aria-hidden="true"></i>
+                      <%= @user.position %>
+                    <% end %>
+
+                    <% if !@user.company.nil? && @user.company != "" %>
+                      &middot;
+                      <i class="fa fa-building color-primary" aria-hidden="true"></i>
+                      <%= @user.company %>
+                    <% end %>
+
+                    <% if !@user.location.nil? && @user.location != "" %>
+                      &middot;
+                      <i class="fa fa-map-marker color-primary" aria-hidden="true"></i>
+                      <%= @user.location %>
+                    <% end %>
+                  </p>
+
+                  <nav>
+                    <%= link_to messages_path(init: @user.identifier), class: "btn btn-sm btn-primary btn-flat", :target => "_blank" do %>
+                      <i class="icon dripicons-message"></i> &nbsp; Say Hello
+                    <% end %>
+                  </nav>
+
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+<div id="event-menu-content">
+    <%# render :partial => 'users/attending', :object => @user %>
+</div>

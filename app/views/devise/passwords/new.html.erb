@@ -1,0 +1,207 @@
+<style>
+  .panel {
+    border: 1px solid #dce0e0;
+    background-color: #fff;
+    border-radius: 0;
+    padding: 32px;
+  }
+
+  .signup-login-form-container{
+    padding-bottom: 20px;
+  }
+
+  /* centered columns styles */
+  .row-centered {
+      text-align:center;
+  }
+  .col-centered {
+      display:inline-block;
+      float:none;
+      /* reset the text-align */
+      text-align:left;
+      /* inline-block space fix */
+      margin-right:-4px;
+  }
+  .col-fixed {
+    /* custom width */
+    width:320px;
+  }
+  .col-min {
+      /* custom min width */
+      min-width:320px;
+  }
+  .col-max {
+      /* custom max width */
+      max-width:450px;
+  }
+
+  .btn-primary.btn {
+    border-color: #357ebd;
+    border-bottom-color: #5CC1DC;
+    background-color: #468BC7;
+    color: #fff;
+  }
+
+  .btn-primary.btn:hover {
+    opacity: 0.75;
+  }
+
+  .signup-login-form__btn-xl {
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+    padding-left: 40px;
+    font-weight: normal;
+  }
+
+  .decorative-input {
+    background-image: url(https://a1.muscache.com/airbnb/static/signinup/text-field-icons-72d5ec863b1ef7c22391015ec8af5906.png);
+    background-repeat: no-repeat;
+    background-position: right 9px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+    font-size: 14px;
+    height: 40px;
+    padding: 10px 35px 10px 10px;
+    width: 100% !important;
+    -webkit-background-size: 40px 171px;
+    -moz-background-size: 40px 171px;
+    -o-background-size: 40px 171px;
+    background-size: 40px 171px;
+  }
+
+  .decorative-input[type=email] {
+    background-position: right -40px;
+  }
+
+  .decorative-input[type=password], .decorative-input.otp-input, .decorative-input.recaptcha_response_field {
+    background-position: right -90px;
+  }
+
+  .panel-footer {
+    position: relative;
+    margin: 0;
+    background-color: #fff;
+    border-top: 1px solid #dce0e0;
+    padding: 15px 0px;
+  }
+
+  .panel-footer-authenthicate{
+    margin-top: 10px;
+  }
+
+  .signup-login-form__switch-copy {
+    float: left;
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 30px;
+    font-size: 16px;
+  } 
+
+  .signup-login-form__btn-rausch-border{
+    border: 1px solid #357ebd;
+    color: #357ebd;
+  }
+
+  .signup-login-form__btn-rausch-border:hover{
+    background-color: #fff;
+  }
+
+  ul{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .omniauth-links{
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .actions {
+    margin-top: 10px;
+  }
+
+  .clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+  }
+
+  .clearfix:after {
+    clear: both;
+  }
+
+
+  /* Reset Password form starts */
+  
+  .panel-with-header__container{
+  	padding: 0px;
+  }
+
+  .panel-dark, .panel-header {
+    background-color: #edefed;
+  }
+
+  .panel-header {
+    color: #484848;
+    font-size: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #dce0e0;
+  }
+
+  .panel-header, .panel-body, ul.panel-body>li, ol.panel-body>li, .panel-footer {
+    position: relative;
+    margin: 0;
+    padding: 20px;
+    border-top: 1px solid #dce0e0;
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+  }
+
+  /* Reset Password form stops */
+  	
+
+</style>
+<div class="row row-centered">
+  <div class="col-centered">
+    <div class="panel panel-with-header__container col-min col-max">
+		<h3 class="panel-header panel-header-gray forgot_password_container">
+		  Reset Password
+		</h3>
+
+		<div class="panel-body">
+			<p>	
+				Enter the email address associated with your account, and we’ll email you a link to reset your password.
+			</p>
+
+			<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+			  <%= devise_error_messages! %>
+
+			  <div class="field form-group">
+		        <%= f.email_field :email, autofocus: true, class: "form-control decorative-input inspectletIgnore", placeholder: "Email address", required: "required" %>
+		      </div>
+
+		      <hr/>
+
+			  <div class="actions">
+			    <%= f.submit "Send Reset Link", class: "btn btn-primary" %>
+			  </div>
+			<% end %>    
+		</div>
+
+
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,42 @@
+<div id="js-error-block-login" class="alert alert-danger" style="display:none;">
+  <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Invalid email or password.
+</div>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), :html => { :id => "ajax_signin"}, format: :json, remote: true) do |f| %>
+  <div class="field form-group">
+    <%= f.email_field :email, autofocus: true, class: "form-control decorative-input inspectletIgnore", placeholder: "Email address", required: "required" %>
+  </div>
+
+  <div class="field form-group">
+    <%= f.password_field :password, autocomplete: "off", class: "form-control decorative-input inspectletIgnore", placeholder: "Password", required: "required" %>
+  </div>
+
+  <div class="clearfix">
+    <%= f.check_box :remember_me, class: "remember_me" %> Remember me
+      
+    <%= link_to "Forgot password?", new_password_path(resource_name), class: "forgot-password pull-right" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Log in", class: "btn btn-primary btn-block signup-login-form__btn-xl btn-large btn-login btn-flat" %>
+  </div>
+
+  <%= render 'devise/shared/omniauth_links' %> 
+<% end %>
+
+<div class="panel-footer panel-footer-authenthicate">
+  <div class="clearfix">
+    <span class="signup-login-form__switch-copy">
+      Don't have an account?
+    </span>
+    <% if params[:controller] == "sessions" %>
+      <%= link_to "Sign up", signup_path, class: "btn btn-default pull-right signup-login-form__btn-rausch-border" %>  
+    <% else %>
+      <%= link_to "Sign up", "#", id: "signup-login-form__btn", class: "btn btn-default pull-right signup-login-form__btn-rausch-border" %>  
+    <% end %>            
+  </div>
+</div>
+
+    
+
+

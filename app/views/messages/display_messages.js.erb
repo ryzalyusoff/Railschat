@@ -1,0 +1,16 @@
+//alert("heyyy <%= @messaged_user_id %>!");
+
+$("#message-header h3").html("<%= @contact.full_name %>");
+
+$("#message-body").html("<%= j render(:partial => 'messages/display_messages') %>");
+
+$("#pusher-<%= @pusher_channel %>").removeClass('unread');
+
+// Messages notification badge update
+<% if @unread_messages > 0 %>
+	$("#messages-notification-badge").html("<%= @unread_messages %>");	
+<% else %>
+	$("#messages-notification-badge").hide();     	
+<% end %>
+
+

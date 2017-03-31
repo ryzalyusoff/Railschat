@@ -1,0 +1,54 @@
+<style>
+  .users{
+    margin: 20px auto;
+  }
+
+  .user{
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .user a{
+    color: #333;
+    font-weight: 700;
+  }
+
+  .user .btn-primary{
+    color: #fff;
+  }
+</style>
+
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-md-12 col-no-padding-x">
+      <h1>Users</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-no-padding-x">
+      <div class="users">
+        <% @users.each_with_index do |user, index| %>
+          <div class="user">
+            <b><%= index + 1 %>.</b> &nbsp;&nbsp;
+
+            <%= link_to user.full_name, user %>
+
+            &nbsp;&nbsp;
+
+            <%= link_to messages_path(init: user.identifier), class: "btn btn-sm btn-primary btn-flat", :target => "_blank" do %>
+              <i class="icon dripicons-message"></i> &nbsp; Say Hello
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>

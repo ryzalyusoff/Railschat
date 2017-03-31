@@ -1,0 +1,1 @@
+$(document).ready(function(){$(".timepicker").timepicker({timeFormat:"h:mm p",interval:30,minTime:"12:00am",maxTime:"11:30pm",startTime:"12:00am",dynamic:!1,dropdown:!0,scrollbar:!0}),$(".timepicker-new").timepicker({timeFormat:"h:mm p",interval:30,minTime:"12:00am",maxTime:"11:30pm",defaultTime:"00",startTime:"12:00am",dynamic:!1,dropdown:!0,scrollbar:!0})});

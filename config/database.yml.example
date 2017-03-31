@@ -1,0 +1,21 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  username: quickrails
+  password: quickrails
+  socket: /tmp/mysql.sock
+
+development:
+  <<: *default
+  database: quickrails_development
+
+test:
+  <<: *default
+  database: quickrails_test
+
+production:
+  <<: *default
+  database: <%= ENV['QUICKRAILS_DATABASE'] %>
+  username: <%= ENV['QUICKRAILS_USERNAME'] %>
+  password: <%= ENV['QUICKRAILS_PASSWORD'] %>

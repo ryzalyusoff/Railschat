@@ -1,0 +1,440 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinysort/2.3.6/tinysort.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+
+      /***  Sort conversations by the lastest (new to call the function) ***/
+      tinysort.defaults.order = 'desc';
+      tinysort.defaults.attr = 'data-last-conversation-id';
+
+      /*** 1. Display the first conversation on ON page load/refresh ***/
+      if ( $('#conversation-list').children().length > 0 ) {
+
+        if ($("#conversation-list li.active").length == 0) {
+          var first_conversation = $();
+          var init = ""
+          
+          if ( getParameterByName("init") != null ) {
+            init = getParameterByName("init");
+
+            var conversation = $("#conversation-list li[data-init='" + init +"']");
+            if (conversation.length) {
+              first_conversation = conversation
+              $("#conversation-list").prepend(first_conversation);
+            } else {
+              tinysort('#conversation-list>li');
+              first_conversation = $("#conversation-list li").first();
+            }
+
+          } else {
+            tinysort('#conversation-list>li');
+            first_conversation = $("#conversation-list li").first(); 
+          }
+
+          first_conversation.addClass("active");
+          first_conversation_link = first_conversation.find(".display-msg-btn").trigger("click");
+
+          recipient_id = first_conversation.attr("data-contact-id");
+          $("#message_recipient_id").attr('value', recipient_id);
+        }
+
+      } else {   
+        $("#message_recipient_id").attr('value', 1);
+      }
+
+      /*** 2. Display the conversation for with that particular person ON click ***/
+      $("#conversation-list li a").click(function(){
+        $(this).next().find('.display-msg-btn').trigger('click');
+
+        $("#conversation-list li").removeClass('active');
+
+        $(this).parent().removeClass('unread');
+        $(this).parent().addClass('active');
+
+        recipient_id = $(this).parent().attr("id").split("-")[2];
+        $("#message_recipient_id").attr('value', recipient_id);
+      });
+        
+      /*** 3. Set Pusher channel  ***/
+      var pusher = new Pusher('20419b189a934e630634', {
+        cluster: 'eu',
+        encrypted: true
+      });
+
+      var channel = pusher.subscribe('private-'+"<%= current_user.id %>");
+     
+      pusher.connection.bind('connected', function() {
+        $('div#status').text('Connected to Pusher!');
+
+        var socket_id = pusher.connection.socket_id;
+        $('#socket_id').val(socket_id);
+      });
+
+      /*** 4. Processing new message throuh Pusher  ***/
+      channel.bind('new_message', function(data) {              
+        // Update conversation box on sidebar
+        conversation_string = "pusher-"+data.pusher_channel;
+        conversation = $("#"+conversation_string);
+        conversation.find('.last-conversation').html(data.text);
+        conversation.attr("data-last-conversation-id",data.data_id);
+        active_conversation = $("#conversation-list li.active");
+
+        if (conversation_string != active_conversation.attr("id")) {
+          // Insert the unread class
+          conversation.addClass("unread");
+
+          // Update notification badge counter
+          unread_messages = $("#messages-notification-badge").text();
+          if (unread_messages == "") {
+            unread_messages = 1
+            $("#messages-notification-badge").html(unread_messages);
+            $("#messages-notification-badge").show();
+          } else {  
+            unread_messages = parseInt(unread_messages) + 1
+            $("#messages-notification-badge").html(unread_messages.toString());
+            $("#messages-notification-badge").show(); 
+          } 
+        } else {
+          // Append the message to chat area
+          addMessage(data);
+        }
+
+        /** Enable this to send flash message to recipient
+          msg = data.sender_id + ' has sent you message: ' + data.text;
+          dom_notify(msg);
+        */
+      });
+
+      /** Flash message for recipient 
+        function dom_notify(msg) {
+          $('#notify').text(msg);
+          $('#notify').fadeIn();
+          setTimeout(function() {
+            $('#notify').fadeOut
+            ();
+          }, 2000);
+        }
+      */
+
+      /***  5. Append new message to recipient ***/
+      function addMessage(data) {
+        $('#append_msg__user_id').val(data.sender_id);
+        $('#append_msg__text').val(data.text);
+        $('#append-msg-btn').trigger("click");
+      }
+
+      /*** 6. Append new message to original sender ***/
+      $('#new_message').on('ajax:success', function(xhr, data, status) {
+        var message_id = data['id'];
+        var recipient_id = data['recipient_id'];
+        var text = data['text'];
+        
+        // Using another div instead of append through ajax as this is faster
+        $('#message-template .message-body').html(text);
+        $('#messages_list').append( $('#message-template').contents().clone() );
+        $('#message_text').val('');
+
+        var conversation = $("#conversation-list li[data-contact-id='" + recipient_id +"']");
+        
+        conversation.find(".last-conversation").html(text);
+        conversation.attr("data-last-conversation-id", message_id);
+
+        tinysort('#conversation-list>li');
+
+      });
+
+      /***  Enable message to be sent by carriage return ***/
+      $('.keyboard-enable').keydown(function(e) {
+        var form = $(this).parents('form');
+        var comment = form.find("input[type=text], input").val();
+
+        var key = e.keyCode || e.which;
+        if (key == 13) {
+          if (comment == "") {
+            alert("Please enter something! :)");
+          } else {
+            form.find(':submit').trigger('click');
+          }
+          return false;
+        }
+      });
+      
+      /***  Sort conversations by the lastest ***/
+      //tinysort('#conversation-list>li');
+
+
+      function getParameterByName(name) {
+       return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+      }
+      
+
+  });
+</script>
+<style>
+  #conversation-sidebar{
+    width: 100%;
+    padding-top: 10px;
+  }
+
+  #conversation-list li{
+    padding: 10px 15px 0px 15px;
+    border-bottom: 1px solid #E9EBEE;
+  }
+
+  #conversation-list li a{ 
+    text-decoration: none;
+    color: #333;
+  }
+
+  #conversation-list li.active{
+    background-color: #2e99e6;
+  } 
+
+  #conversation-list li.active .media-heading{
+    color: #fff !important;
+  }
+
+  #conversation-list li.active a{
+    color: #fff;
+  }
+
+  #conversation-list li.unread{
+    background-color: #ecf0f7;
+  }
+
+  #conversation-search{
+    padding: 15px;
+    margin-top: 10px;
+  }
+
+  #message-header{
+    width: 100%;
+    padding-bottom: 5px; 
+    border-bottom: 1px solid #E9EBEE;
+    margin-top: 0px;
+
+    padding: 10px;
+    background: #ECEFF1;
+    min-height: 52px;
+    overflow: hidden;
+    color: #333;
+    font-size: 20px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+
+  #message-body{
+    margin: 15px 0px 10px; 
+    padding-bottom: 20px;
+  }
+
+  #new_message{
+    margin-bottom: 20px;
+  }
+
+  .search-form{
+    width: 100%;
+    padding: 15px 15px;
+    border: 1px solid #e6e6e6;
+    background-color: #eceff1;
+    border-radius: 21px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+  }
+
+  #conversation-right{
+    border-left: 1px solid #ddd;
+  }
+
+  .keyboard-enable{
+    resize: none;
+    height: 30px;
+  }
+
+
+  .icon-search-input{
+    padding: 3px;
+    border: solid 1px #E4E4E4;
+    border-radius: 6px;
+    background-color: #fff;
+  }
+
+  .icon-search-input input{
+      border: 0;
+      box-shadow: none;
+      font-size: 14px;
+      width: 100%;
+  }
+
+  .icon-search-input button{
+      margin: 2px 0 0 0;
+      background: none;
+      box-shadow: none;
+      border: 0;
+      color: #666666;
+      padding: 0 8px 0 10px;
+  }
+
+  .icon-search-input button:hover{
+      border: 0;
+      box-shadow: none;
+      border-left: solid 1px #ccc;
+      background-color: #333;
+  }
+
+  .icon-search-input .glyphicon-search{
+  }
+
+  *:focus {
+    outline: none !important;
+  }
+
+  input:focus{
+   outline:none !important;
+  }
+
+  html,body {
+    height:100%;
+  }
+
+
+
+</style>
+
+<div class="panel panel-default panel-no-padding full-height margin-top-lg">
+  <div class="panel-body no-padding full-height">
+    <div class="row full-height">
+      <div id="conversation-left" class="col-md-4 no-padding-right"> 
+        <div class="row">
+          <div class="col-md-12">
+            <div id="conversation-search">
+              <input type="text" class="search-form" placeholder="Search conversations..." />
+            </div>
+          </div>
+        </div>  
+
+        <div class="row">
+          <div class="col-md-12">
+            <div id="conversation-sidebar">
+              <ul id="conversation-list">
+                <% @contacts.each do |contact| %>
+                  <% 
+                    contact = User.find(contact)
+
+                    pusher_channel = ""
+                    if current_user.id < contact.id
+                      pusher_channel = "#{current_user.id}-#{contact.id}"
+                    else
+                      pusher_channel = "#{contact.id}-#{current_user.id}"
+                    end 
+
+                    last_message_id = 0
+                    last_message_text = ""
+                    last_message = Message.where(pusher_channel: pusher_channel).last
+
+                    if last_message
+                      last_message_id = last_message.id
+                      last_message_text = last_message.text
+                    else
+                      last_message_id = 99999
+                      last_message_text = ""
+                    end  
+                  %> 
+                  
+                  <li id="pusher-<%= pusher_channel %>" data-contact-id="<%= contact.id %>" data-last-conversation-id="<%= last_message_id %>" data-init="<%= contact.identifier %>"
+                    <% if last_message && (last_message.recipient_id == current_user.id) && ( last_message.unread?(current_user) == true ) %>
+                      class="unread"
+                    <% end %>
+                    >
+
+                    <a href="#" style="display: flex;">
+                      <%# :locals option => which accepts a Hash whose keys become local variables with the partial. %>
+                      <% @user = contact %>
+                      <figure class="avatar-small">
+                        <%= render :partial => 'messages/media_user_message', :locals => { user: @user, last_message_text: last_message_text, user_link: false } %> 
+                      </figure>
+                    </a>
+                  
+                    <%= form_tag({controller: "messages", action: "display_messages"}, method: "post", :remote => true) do |f| %>
+                      <%= hidden_field_tag :pusher_channel, pusher_channel %>
+                      <%= hidden_field_tag :contact_id, contact.id %>
+                      <%= submit_tag "Display", :class => "btn btn-xs btn-success display-msg-btn hidden" %>
+                    <% end %>
+                  
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="conversation-right" class="col-md-8 full-height">
+        <div class="row">
+          <div class="col-md-12 no-padding-left">
+            <div id="message-header">
+              <h3></h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="row full-height-88">
+          <div class="col-md-12 full-height">
+            <div id="message-body" class="pre-scrollable full-height">
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-12 padding-right-30">
+            <%= render 'form' %>  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>    
+
+<div  style="display:none;">
+  <%= form_tag({controller: "messages", action: "append_message"}, method: "post", :remote => true) do |f| %>
+    <%= hidden_field_tag :append_msg__user_id %>
+    <%= hidden_field_tag :append_msg__text %>
+    <%= submit_tag "Append Msg", :class => "btn btn-xs btn-success", :id => "append-msg-btn" %>
+  <% end %>
+
+  <div id="message-template">
+    <% @user = current_user %>
+    <%= render :partial => 'messages/media_user_message', :locals => { user: @user, last_message_text: "", user_link: true } %> 
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

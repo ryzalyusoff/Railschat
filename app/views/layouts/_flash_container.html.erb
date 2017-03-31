@@ -1,0 +1,52 @@
+<%# if user_signed_in? && !current_user.confirmed? %>
+  <!--
+  <div class="alert-danger alert-confirm">
+    <div class="container">
+        <div class="alert-content">
+        	<div class="row">
+        		<div class="col-md-8">
+        			<b>Please verify your email address to access all of Quickrail's features.</b> <br/>
+        			An email containing verification instructions was sent to <%# current_user.email %>.
+        		</div>
+        		<div class="col-md-4">
+        		  <%# link_to "Resend confirmation email", user_confirmation_path, data: { method: :post }, :class => "btn btn-default btn-md pull-right" %>
+        		</div>
+        	</div>
+        </div>
+    </div>
+  </div>
+  -->
+<%# end %>
+
+<% flash.each do |key, value| %>
+
+   <div class="flash-container alert-<%= key %>">
+    <div class="container">
+      <div class="alert-content">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <% flash.each do |key, value| %>
+              <%= value %> <br/>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    setTimeout("$('.flash-container').fadeOut('slow')", 3000)
+  </script>
+
+<% end %>
+
+<div class="alert-success js-success-block" style="display:none;">
+  <div class="container">
+      <div class="alert-content">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            Your details have been successfully updated
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

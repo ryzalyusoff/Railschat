@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Railschat</title>
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= stylesheet_link_tag params[:controller] %>
+  <%= javascript_include_tag 'application' %>
+  <%= javascript_include_tag params[:controller] %>
+  <%= render 'layouts/external_scripts' %>
+  <%= render 'layouts/api_scripts' %>
+  <%= csrf_meta_tags %>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+
+  <%= render 'layouts/navigation' %>
+  <%= render 'layouts/flash_container' %>
+  <%= render 'layouts/page_header' %>
+  <%= render 'layouts/container_normal' %>
+
+  <% if user_signed_in?  %>
+    <%= render 'layouts/navigation_bottom' %>
+  <% end %>
+
+  <!-- General Modal popup -->
+  <div id="modal-window" class="modal fade" role="dialog" aria-hidden="true" style="display: none;">
+  </div>
+
+  <!-- Login Modal popup -->
+  <div class="modal fade" id="loginModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+          <%# render "devise/sessions/login" %>
+          <%= render 'devise/shared/omniauth_links' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signup Modal popup -->
+  <div class="modal fade" id="signupModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+          <%= render 'devise/registrations/signup' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

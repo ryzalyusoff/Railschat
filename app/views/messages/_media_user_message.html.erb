@@ -1,0 +1,33 @@
+<% @user = user %>
+      
+<div class="media">
+  <div class="media-left">
+    <% if user_link == true %>
+      <%= link_to user_path(@user) do %>
+        <figure class="avatar-small avatar-round">
+          <%= render :partial => 'shared/user_avatar', :object => @user %> 
+        </figure>
+      <% end %>
+    <% else %>
+      <figure class="avatar-small avatar-round">
+        <%= render :partial => 'shared/user_avatar', :object => @user %> 
+      </figure>
+    <% end %>
+  </div>
+  <div class="media-body">
+    <header class="media-heading bold-dark">
+      <% if user_link == true %>
+        <%= link_to user_path(@user) do %>
+          <%= @user.full_name %>
+        <% end %>
+      <% else %>
+        <%= @user.full_name %>
+      <% end %>
+    </header>
+    <p class="last-conversation message-body">
+      <% if last_message_text != "" %>
+        <%= last_message_text %>
+      <% end %>
+    </p>
+  </div>
+</div>

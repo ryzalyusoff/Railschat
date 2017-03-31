@@ -1,0 +1,13 @@
+<div class="row row-centered row-no-margin-x margin-top-lg">
+    <div class="col-centered">
+        <center>
+          <%= link_to root_path do %>
+            <h1>Railschat</h1>
+          <% end %>
+        </center>
+      	<div class="panel panel-padding signup-login-form-container col-min col-max margin-top-md">
+      		<%= render 'devise/sessions/form' %>
+      		<%# render 'devise/shared/omniauth_links' %>
+    	</div>
+  	</div>
+</div>

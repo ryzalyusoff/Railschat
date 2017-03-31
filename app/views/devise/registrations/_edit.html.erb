@@ -1,0 +1,103 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        if ($.support.pjax) {
+            $(document).on('click', '.sidebar-section a', function(event) {
+                var container = $('.section-content');
+                $.pjax.click(event, {container: container});
+
+                var header = $('.section-header');
+                var section_title = $(this).find('span').html(); 
+                header.html(section_title);
+
+                $('.sidebar-section li').removeClass("section-active");
+                $(this).parent().addClass("section-active");
+            });
+        }
+
+        <% if current_page?(user_edit_overview_path(user_id: current_user.id)) %>
+            $('.sidebar-section li').first().find('a').trigger('click');
+        <% elsif current_page?(user_edit_photo_path(user_id: current_user.id)) %>   
+            $('.sidebar-section li:nth-child(2)').first().find('a').trigger('click');
+        <% elsif current_page?(user_edit_account_path(user_id: current_user.id)) %> 
+            $('.sidebar-section li:nth-child(3)').first().find('a').trigger('click');
+        <% else %>
+            $('.sidebar-section li').first().find('a').trigger('click');
+        <% end %>
+
+        var filepickerApiKey = 'A3bXgfB4ATz6DcjHDTn2dz'
+        filepicker.setKey(filepickerApiKey);
+        $('#upload-profile-photo-btn').click(function(){
+            filepicker.pickMultiple(
+            {
+              mimetype: 'image/*',
+              maxFiles: 1
+            },
+            function(Blobs){
+              //console.log(JSON.stringify(Blobs));
+              //alert(JSON.stringify(Blobs));
+
+              filestack_url = ""
+
+              for(i=0; i<Blobs.length; i++) {
+                var filestack_url =  Blobs[i].url;
+
+                filestack_url = filestack_url;
+              }
+
+              $("#user_image").attr('value', filestack_url);
+              $("#imgPlaceholder").attr('src', filestack_url);
+
+            },
+            function(error){
+            //  console.log(JSON.stringify(error)); - print errors to console
+            }
+
+            );
+        });
+
+    });
+</script>
+
+<div class="panel panel-default panel-no-padding">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="sidebar-section">
+                    <li class="section-active">                      
+                      <%= link_to user_edit_overview_path(user_id: current_user.id) do %>
+                        <i class="fa fa-info-circle" aria-hidden="true"></i> 
+                        <span>Overview</span>
+                      <% end %>      
+                    </li>
+                    <li>
+                      <%= link_to user_edit_photo_path(user_id: current_user.id) do %>
+                        <i class="fa fa-picture-o" aria-hidden="true"></i>
+                        <span>Photo</span>
+                      <% end %>     
+                    </li>
+                    <li>
+                      <%= link_to user_edit_account_path(user_id: current_user.id) do %>
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <span>Account</span>
+                      <% end %>     
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div class="sidebar-section-body">
+                    <h3 class="section-header">
+                    </h3>
+
+                    <div class="section-content">
+                        <% if @partial_content %>
+                            <%= render @partial_content %>
+                        <% else %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

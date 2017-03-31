@@ -1,0 +1,35 @@
+
+function reset_errors() {
+  $('.js-error-block').html('');
+  $('.js-error-block').hide();	
+  $('.form-control').attr('style','1px solid #ccc;');
+}
+
+<% if @update %>
+
+  var form_id = "#<%= @form_id %>";	
+  reset_errors();
+
+  $('.js-success-block').show();
+  setTimeout(function(){
+	$(".js-success-block").hide();
+  }, 3000);
+
+<% else %>
+
+  reset_errors();	
+
+  <% if @user.errors.messages.size > 0 %>
+  	<% @user.errors.each do |attr,err| %>
+  		
+		var field = "#user_<%= attr %>";
+		var error_message = "<%= attr.to_s.gsub('_',' ').titleize %> <%= err %>";
+	
+		$(field).css('border', '1px solid #D9534F');
+		$(field).next().html(error_message);
+		$(field).next().show();
+
+  	<% end %>
+  <% end %>
+
+<% end %>

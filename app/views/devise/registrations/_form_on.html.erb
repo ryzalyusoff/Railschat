@@ -1,0 +1,53 @@
+<div id="js-error-block-signup" class="alert alert-danger" style="display:none;">
+  <ul></ul>
+</div>
+
+<% if !params[:callback].blank? && params[:callback] == "twitter"  %>
+
+  <h2>Almost there :)</h2>
+  <p>Finish creating your account by entering your email address.</p>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+
+    <div class="field">
+      <%= f.email_field :email, autofocus: true, class: "form-control decorative-input inspectletIgnore", placeholder: "Email address", required: "required"  %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Create account", class: "btn btn-primary btn-block signup-login-form__btn-xl btn-large btn-flat" %>
+    </div>
+  <% end %>
+  
+  <br/>
+
+<% else %>  
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), :html => { :id =>  (params[:controller] == "registrations" ? "" : "ajax_signup") }) do |f| %>
+    <% if params[:controller] == "registrations" %>
+      <%= devise_error_messages! %>
+    <% end %>
+
+    <div class="field form-group">
+      <%= f.text_field :first_name, class: "form-control decorative-input", placeholder: "First name", required: "required" %>
+    </div>
+
+    <div class="field form-group">
+      <%= f.text_field :last_name, class: "form-control decorative-input", placeholder: "Last name", required: "required" %>
+    </div>  
+
+    <div class="field form-group">
+      <%= f.email_field :email, autofocus: true, class: "form-control decorative-input inspectletIgnore", placeholder: "Email address", required: "required" %>
+    </div>
+
+    <div class="field form-group">
+      <%= f.password_field :password, autocomplete: "off", class: "form-control decorative-input inspectletIgnore", placeholder: "Password", required: "required" %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Sign up", class: "btn btn-primary btn-block signup-login-form__btn-xl btn-large btn-login btn-flat" %>
+    </div>
+  <% end %>
+
+<% end %>  
+
+<%= render 'devise/shared/omniauth_links' %> 

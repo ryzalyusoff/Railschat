@@ -1,0 +1,1 @@
+$('#messages_list').append("<%= j render(:partial => 'messages/message') %>");

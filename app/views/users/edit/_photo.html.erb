@@ -1,0 +1,70 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+
+      var filepickerApiKey = 'A3bXgfB4ATz6DcjHDTn2dz'
+      filepicker.setKey(filepickerApiKey);
+      $('#upload-profile-photo-btn').click(function(){
+          filepicker.pick(
+          {
+            mimetype: 'image/*',
+            maxFiles: 1,
+            services: ['COMPUTER', 'URL', 'IMAGE_SEARCH']
+          },
+          function(Blobs){
+            //console.log(JSON.stringify(Blobs));
+            //alert(JSON.stringify(Blobs));
+
+            var filestack_url =  Blobs['url'];
+            filestack_url = filestack_url;
+
+            $("#user_avatar").attr('value', filestack_url);
+            $("#imgPlaceholder").attr('src', filestack_url);
+
+          },
+          function(error){
+          //  console.log(JSON.stringify(error)); - print errors to console
+          }
+
+          );
+      });
+
+    });
+</script>
+
+<div id="panel-body-photo" class="panel-content"> 
+   <div class='js-error-block' style="display:none;"></div>
+
+  <figure class="avatar avatar-xtra-large avatar-round">
+    
+    <% if !@user.avatar.nil? %>
+      <%= image_tag @user.avatar, id: "imgPlaceholder", class: "img-circle" %>
+    <% else %>
+      <% if @user.oauth_avatar != nil %>
+        <% if @user.provider == "facebook" %>
+          <%= image_tag @user.oauth_avatar + "?type=large", id: "imgPlaceholder", class: "img-circle" %>
+        <% else %>
+          <%= image_tag @user.oauth_avatar, id: "imgPlaceholder", class: "img-circle" %>
+        <% end %>
+      <% else %>
+        <%= image_tag "default-avatar.png", id: "imgPlaceholder", class: "img-circle" %>
+      <% end %>
+    <% end %>
+    
+  </figure>
+
+  <div class="margin-top-lg">
+    <a href="#" id="upload-profile-photo-btn" class="btn btn-md btn-primary pull-left" style="margin-right: 10px;" >Upload new photo</a>
+
+    <%= form_for(@user, url: registration_path(resource_name), html: { method: :patch, multipart: true, id: "update-avatar-form" }, remote: true, :authenticity_token => true) do |f| %>
+      
+      <%# f.file_field :avatar, id: "upload-avatar-input" %>        
+      <%# f.hidden_field :form_id, :value => "update-avatar-form" %> 
+
+      <%= f.hidden_field :avatar, :value => "" %>
+      <%= f.button class: "btn btn-primary btn-md pull-left", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Save"} do %>
+        <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+      <% end %>
+    <% end %>
+  </div>
+
+</div>

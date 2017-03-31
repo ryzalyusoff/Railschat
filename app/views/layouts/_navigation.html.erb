@@ -1,0 +1,88 @@
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <% if user_signed_in?  %>
+        <%= button_to destroy_user_session_path, class: "navbar-toggle collapsed", :method => :get do %>
+          Logout
+        <% end %>
+      <% else %>
+        <%= button_to login_path, class: "navbar-toggle collapsed", :method => :get do %>
+          Login
+        <% end %>
+      <% end %>
+      <a class="navbar-brand" href="<%= root_url %>">Railschat</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right no-margin-right">
+
+        <% if user_signed_in? %>
+          <li>
+            <%= link_to chat_path, id: "messaging-notification" do %>
+              <i class="icon dripicons-message"></i>
+
+              <%
+                unread_messages = 0
+                user_messages =  Message.where(recipient_id: current_user.id)
+                user_messages.each do |user_message|
+                  if user_message.unread?(current_user) == true
+                    unread_messages += 1
+                  end
+                end
+              %>
+
+              <% if unread_messages > 0 %>
+                  <span id="messages-notification-badge" class="notification-badge"><%= unread_messages %></span>
+              <% else %>
+                  <span id="messages-notification-badge" class="notification-badge" style="display:none;"></span>
+              <% end %>
+
+            <% end %>
+          </li>
+
+          <li>
+            <%= link_to user_path(current_user), style: "padding-top: 0px; padding-bottom: 0px;margin-top: 8px;" do %>
+              <% @user = current_user %>
+              <figure class="avatar-small avatar-round">
+                <%= render :partial => 'shared/user_avatar', :object => @user %>
+              </figure>
+            <% end %>
+          </li>
+
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-chevron-down"></span></a>
+            <ul class="dropdown-menu">
+              <li>
+                <%= link_to edit_user_registration_path do %>
+                  <span class="glyphicon glyphicon-cog"></span> &nbsp; Settings
+                <% end %>
+              </li>
+              <li>
+                <%= link_to destroy_user_session_path do %>
+                  <span class="glyphicon glyphicon-log-out"></span> &nbsp; Log out
+                <% end %>
+              </li>
+            </ul>
+          </li>
+
+        <% else %>
+
+          <% if (params[:controller] != "sessions" && params[:controller] != "registrations" )   %>
+            <li>
+              <%= link_to login_path, class: 'btn' do %>
+                <i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp; Log in
+              <% end %>
+            </li>
+            <li>
+              <%= link_to signup_path, class: "btn-primary-white-border btn-flat btn-nav" do %>
+                Sign Up
+              <% end %>
+            </li>
+          <% end %>
+
+        <% end %>
+
+      </ul>
+    </div>
+  </div>
+</nav>

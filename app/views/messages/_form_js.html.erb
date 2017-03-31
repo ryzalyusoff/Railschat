@@ -1,0 +1,24 @@
+<% @message = Message.new %>
+<%= form_for(@message, remote: true, format: :json) do |f| %>
+  <% if @message.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@message.errors.count, "error") %> prohibited this message from being saved:</h2>
+
+      <ul>
+      <% @message.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.text_area :text, :class => "form-control keyboard-enable"  %>
+  </div>
+  <div class="actions">
+    <%= f.hidden_field :recipient_id %>
+    <%= hidden_field_tag :socket_id %>
+    <%= f.submit value: "Send Message", id: "send-message__btn", class: "btn btn-primary btn-md" %>
+  </div>
+
+<% end %>

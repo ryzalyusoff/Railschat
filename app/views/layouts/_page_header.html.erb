@@ -1,0 +1,9 @@
+<% if !current_page?('/') && content_for?(:page_title) %>
+
+	<div class="row row-no-margin-x page-header-wide">
+		<div class="container">
+			<h1><%= yield :page_title %></h1> 
+		</div>
+	</div>
+
+<% end %>

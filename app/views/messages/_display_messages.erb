@@ -1,0 +1,11 @@
+<div id="messages_list">
+    <% @messages.each do |message| %>
+		<% 
+		sender = User.find(message.sender_id)
+		sender_name = sender.first_name
+		%>
+		
+        <% @user = sender %>
+        <%= render :partial => 'messages/media_user_message', :locals => { user: @user, last_message_text: message.text, user_link: true } %> 
+    <% end %>
+</div>

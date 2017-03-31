@@ -1,0 +1,176 @@
+<style type="text/css">
+
+  #bottom-navigation{
+    height: 50px;
+    background-color: #fff;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+     -webkit-box-shadow: inset 0 13px 20px -20px rgba(0,0,0,0.8);
+    -moz-box-shadow: inset 0 13px 20px -20px rgba(0,0,0,0.8);
+    box-shadow: inset 0 13px 20px -20px rgba(0,0,0,0.8);
+  }
+
+  .bottom-menu{
+    font-size: 15px;
+    height: 100%;
+    padding-top: 14px;
+    text-align: center;
+  }
+
+  .bottom-menu a{
+    display: block;
+    color: #333;
+  }
+
+  .bottom-menu a:hover{
+    text-decoration: none;
+  }
+
+  .bottom-menu:hover{
+    border-top: 1px solid #8dc0ec;
+    border-bottom: 0px;
+  }
+
+  .bottom-menu-active{
+    border-top: 1px solid #337ab7 !important;
+  }
+
+  .bottom-menu-active a{
+    color: #337ab7;
+  }
+
+  #bottom-menu-content {
+    margin-top: 0px;
+  }
+
+  #navMoreModal ul li{
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #B2B1B6;
+  }
+
+  #navMoreModal ul li a{
+    font-size: 14px;
+    display: block;
+    color: #0080D7;
+    font-weight: 400;
+  }
+
+  .border-radius-8 {
+    border-radius: 8px;
+  } 
+
+  .no-border-bottom{
+    border-bottom: 0px !important;
+  }
+
+  .color-danger{
+    color: #FF2F33 !important;
+  }
+</style>
+
+
+<div class="container-fluid">
+
+    <div class="row">
+      <div id="bottom-navigation" style="display: none;">
+        <div 
+          <% if current_page?(root_path) || current_page?(discover_path) || current_page?(upcoming_path) || current_page?(past_path)  %>
+          	class="col-md-3 col-xs-3 bottom-menu bottom-menu-active"
+          <% else %>
+          	class="col-md-3 col-xs-3 bottom-menu"
+          <% end %>
+          >
+          <%= link_to root_path do %>
+            <i class="icon dripicons-direction"></i>  
+          <% end %>
+        </div> 
+        
+        <div
+        	<% if current_page?(chat_path) %>
+	          	class="col-md-3 col-xs-3 bottom-menu bottom-menu-active"
+	        <% else %>
+	          	class="col-md-3 col-xs-3 bottom-menu"
+	        <% end %>
+          >
+          <%= link_to chat_path do %>
+            <i class="icon dripicons-message"></i>  
+          <% end %>
+        </div>  
+
+        <div
+          <% if user_signed_in? %>	
+	        	<% if current_page?(user_path(current_user.id)) %>
+		          	class="col-md-3 col-xs-3 bottom-menu bottom-menu-active"
+		        <% else %>
+		          	class="col-md-3 col-xs-3 bottom-menu"
+		        <% end %>        		
+        	<% else %>
+	        	<% if current_page?(login_path) %>
+		          	class="col-md-3 col-xs-3 bottom-menu bottom-menu-active"
+		        <% else %>
+		          	class="col-md-3 col-xs-3 bottom-menu"
+		        <% end %>
+	        <% end %>
+        	>
+    			
+          <% if user_signed_in? %>	
+    				<%= link_to user_path(current_user.id) do %>
+              <i class="icon dripicons-user"></i>  
+    				<% end %>
+    			<% else %>
+    			        <%= link_to login_path do %>
+              <i class="icon dripicons-user"></i>  
+    			  	<% end %>    
+    			<% end %>
+        </div> 
+
+        <div class="col-md-3 col-xs-3 bottom-menu">
+    			<% if user_signed_in? %>	
+
+              <%= link_to "#", "data-toggle"=>"modal", "data-target"=>"#navMoreModal" do %>
+                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+              <% end %>
+
+    			<% else %>
+    				<%= link_to login_path do %>
+              <i class="icon dripicons-dots-3"></i>  
+            <% end %>
+    			<% end %>
+        </div>    
+      </div>
+    </div>
+
+</div>
+
+<% if user_signed_in?  %>
+  <div class="modal fade" id="navMoreModal" role="dialog">
+    <div class="modal-dialog modal-sm" style="padding-top: 50%;">
+      <div class="modal-content border-radius-8">
+        <div class="modal-body no-padding">
+          <ul>
+            <li>
+              <%= link_to user_path(current_user.id) do %>
+                Profile
+              <% end %>
+            </li>
+            <li>
+              <%= link_to edit_user_registration_path do %>
+                Settings
+              <% end %>
+            </li>
+            <li class="no-border-bottom"> 
+              <%= link_to destroy_user_session_path, class: "color-danger" do %>
+                Log out
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div> 
+<% end %>
+
+
+

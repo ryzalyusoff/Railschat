@@ -1,0 +1,29 @@
+<style type="text/css">
+  .font-info{
+    font-size: 20px;
+  }
+</style>
+
+<% allow_signup = true %>
+<% if allow_signup == true %>
+  <%= render "devise/registrations/form_on" %>
+<% else %>
+  <div class="field form-group font-info">
+      Sorry. We only open Witaji for invited users at the moment.
+  </div>
+<% end %>
+
+<br/>
+
+<div class="panel-footer panel-footer-authenthicate">
+  <div class="clearfix">
+    <span class="signup-login-form__switch-copy">
+      Already a member?
+    </span>
+    <% if params[:controller] == "registrations" %>
+      <%= link_to "Log in", login_path, class: "btn btn-default pull-right signup-login-form__btn-rausch-border" %>
+    <% else %>
+      <%= link_to "Log in", "#", id: "login-signup-form__btn", class: "btn btn-default pull-right signup-login-form__btn-rausch-border" %>
+    <% end %>
+  </div>
+</div>

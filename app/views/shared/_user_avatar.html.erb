@@ -1,0 +1,13 @@
+<% if !@user.avatar.nil? %>
+    <%= image_tag @user.avatar %>
+<% else %>
+  <% if @user.oauth_avatar != nil %>
+    <% if @user.provider == "facebook" %>
+      <%= image_tag @user.oauth_avatar + "?type=small" %>
+    <% else %>
+      <%= image_tag @user.oauth_avatar %>
+    <% end %>
+  <% else %>
+    <%= image_tag "default-avatar.png" %>
+  <% end %>
+<% end %>
