@@ -1,14 +1,14 @@
 # config valid only for current version of Capistrano
 lock '3.8.0'
 
-set :application, 'yourapp'
-set :repo_url, 'git@github.com:user/yourapp.git'
+set :application, 'railschat'
+set :repo_url, 'git@github.com:ryzalyusoff/railschat.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/home/deploy/yourapp'
+set :deploy_to, '/home/deploy/railschat'
 
 set :rbenv_path, '/home/deploy/.rbenv/'
 
